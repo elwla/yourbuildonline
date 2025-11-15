@@ -1,5 +1,3 @@
-import AuthRequest from '@/middlewares/AuthMiddleware';
-
 import ProjectForm from "@/components/projectForm";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";

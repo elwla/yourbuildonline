@@ -12,9 +12,15 @@ interface Project {
     id: number;
     name: string;
     description: string;
-    image_url?: string;
-    status: string;
-    assignedUserId?: string;
+    image_url?: string | null;
+    status: string | null;
+    assignedUserId?: string | null;
+    assignedUser?: {
+        id: string;
+        firstName: string;
+        lastName: string;
+        email: string;
+    } | null;
     project_images: any[];
 }
 
@@ -79,8 +85,8 @@ const BuildingPage = async ({ params }: BuildingPageProps) => {
         );
     }
 
-    const isAdmin = session.user.role === 'admin';
-    const isAssignedUser = project.assignedUserId === session.user.id;
+    const isAdmin = (session.user as {role?: string})?.role === 'admin';
+    const isAssignedUser = project.assignedUserId === (session.user as {id?: string})?.id;
 
     if (!isAdmin && !isAssignedUser) {
         return (
@@ -176,7 +182,7 @@ const BuildingPage = async ({ params }: BuildingPageProps) => {
                                 </div>
                             </div>
                         </div>
-                        {session?.user.role === 'admin' && (
+                        {(session.user as {role?: string})?.role === 'admin' && (
                             <div className="bg-white rounded-2xl shadow-lg p-6 mt-8">
                                 <h3 className="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
                                     <svg className="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -161,7 +161,7 @@ const ProjectElement = async ({ params }: ProjectElementProps) => {
                         </div>
                     </div>
                 )}
-                {session?.user.role === 'admin' && (
+                {(session?.user as {role?: string}).role === 'admin' && (
                     <div className="bg-white rounded-2xl shadow-lg p-6 mt-8">
                                 <h3 className="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
                                     <svg className="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">

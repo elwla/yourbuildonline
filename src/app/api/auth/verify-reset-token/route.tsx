@@ -17,10 +17,10 @@ export async function GET(request: Request) {
             resetTokenExpiry: {
             gt: new Date()
             }
-        }
+        } as any
     });
 
-    if (user.length === undefined) {
+    if (!user) {
       return NextResponse.json({ valid: false }, { status: 400 });
     }
 

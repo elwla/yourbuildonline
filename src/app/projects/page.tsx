@@ -1,6 +1,31 @@
+/**
+ * Página de lista de proyectos completados.
+ *
+ * Esta página es un Server Component de Next.js (es async) que:
+ * - Recupera la lista de proyectos desde la API local en /api/projects
+ * - Renderiza una cuadrícula de tarjetas usando components/projectCard
+ * - Muestra estados vacíos y una sección de métricas simples
+ *
+ * Notas:
+ * - La llamada a la API se realiza con axios hacia http://localhost:3000/api/projects.
+ * - Mantener esta función como Server Component permite fetch directo en el servidor.
+ * - Si quieres convertirla en Client Component, añade "use client" y mueve la lógica de fetch a useEffect.
+ */
 import ProjectCard from "@/components/projectCard";
 import axios from "axios";
 
+/**
+ * Representa un proyecto devuelto por la API.
+ *
+ * @typedef {Object} Project
+ * @property {number} id - Identificador único del proyecto.
+ * @property {string} name - Nombre del proyecto.
+ * @property {string} description - Descripción breve.
+ * @property {string} [image_url] - URL de la imagen del proyecto (opcional).
+ * @property {string} [status] - Estado (e.g., "completed", "in-progress") (opcional).
+ * @property {string[]} [technologies] - Tecnologías usadas (opcional).
+ * @property {string} [completed_date] - Fecha de finalización (ISO) (opcional).
+ */
 interface Project {
     id: number;
     name: string;
@@ -11,11 +36,35 @@ interface Project {
     completed_date?: string;
 }
 
+/**
+ * Recupera la lista de proyectos desde la API local.
+ *
+ * - Endpoint: GET http://localhost:3000/api/projects
+ * - Retorna una promesa que resuelve en un array de Project.
+ * - Lanza la excepción si axios falla — considerar capturar/transformar errores según necesidad.
+ *
+ * @returns {Promise<Project[]>} Array de proyectos.
+ */
 const loadProjects = async (): Promise<Project[]> => {
     const response = await axios.get('http://localhost:3000/api/projects');
     return response.data;
 }
 
+/**
+ * Componente de página que muestra los proyectos.
+ *
+ * Este componente es asíncrono y se ejecuta en el servidor (Server Component).
+ * Se encarga de:
+ *  - Cargar proyectos mediante loadProjects
+ *  - Renderizar la UI de la lista, estado vacío y una sección de métricas
+ *
+ * Consideraciones:
+ *  - Para evitar llamadas innecesarias en tiempo de cliente, mantener la carga en el servidor.
+ *  - Si la API está protegida o depende de cabeceras del request, mover la llamada a una ruta API interna
+ *    que haga la agregación necesaria.
+ *
+ * @returns {JSX.Element} Markup de la página.
+ */
 const ProjectListPage = async () => {
     const allProjects = await loadProjects();
     
@@ -52,7 +101,7 @@ const ProjectListPage = async () => {
                                 className="animate-scale-in"
                                 style={{ animationDelay: `${index * 100}ms` }}
                             >
-                                <ProjectCard project={project} />
+                                <ProjectCard data-testid="project-card" project={project} />
                             </div>
                         ))}
                     </div>

@@ -10,9 +10,10 @@ interface Project {
     id: number;
     name: string;
     description: string;
-    status: string;
-    encryptedUrl: string;
-    created_at: string;
+    status: string | null;
+    encryptedUrl?: string | null;
+    created_at: Date;
+    assignedUserId?: string | null;
 }
 
 const BuildingPage = async () => {
@@ -25,7 +26,7 @@ const BuildingPage = async () => {
     let projects: Project[] = [];
     
     try {
-        const isAdmin = session.user.role === 'admin';
+        const isAdmin = (session.user as {role?: string}).role === 'admin';
 
         if (isAdmin) {
             projects = await prisma.project.findMany({
@@ -49,7 +50,7 @@ const BuildingPage = async () => {
             projects = await prisma.project.findMany({
                 where: {
                     status: 'construyendo',
-                    assignedUserId: session.user.id
+                    assignedUserId: (session.user as {id?: string}).id
                 },
                 select: {
                     id: true,
@@ -69,7 +70,7 @@ const BuildingPage = async () => {
     }
 
     const userProjects = projects.filter(p => p.status === 'construyendo');
-    const isAdmin = session.user.role === 'admin';
+    const isAdmin = (session.user as {role?: string}).role === 'admin';
 
     return (
         <div className="min-h-screen bg-gray-50 py-8">

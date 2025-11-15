@@ -20,7 +20,7 @@ export async function POST(request: Request) {
             resetTokenExpiry: {
             gt: new Date()
             }
-        }
+        } as any
     });
 
     if (user === undefined) {
@@ -35,13 +35,13 @@ export async function POST(request: Request) {
 
     await prisma.user.update({
         where: {
-            id: user.id
+            id: user?.id
         },
         data: {
             password: hashedPassword,
             resetToken: null,
             resetTokenExpiry: null
-        }
+        } as any
     });
 
     return NextResponse.json(

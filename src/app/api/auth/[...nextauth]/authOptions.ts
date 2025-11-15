@@ -96,7 +96,11 @@ export const authOptions: NextAuthOptions = {
         async jwt({ token, user, account }) {
             if (user) {
                 token.id = user.id;
-                token.role = user.role || '';
+                if ('role' in user) {
+                    token.role = (user as any).role ?? '';
+                } else {
+                    token.role = '';
+                }
             }
 
             if (account && account.provider !== 'credentials') {
@@ -118,8 +122,8 @@ export const authOptions: NextAuthOptions = {
         },
         async session({ session, token }) {
             if (session.user) {
-                session.user.id = token.id as string;
-                session.user.role = token.role as string;
+                (session.user as any).id = token.id as string;
+                (session.user as any).role = token.role as string;
             }
             return session;
         },

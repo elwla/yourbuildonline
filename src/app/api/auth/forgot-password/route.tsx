@@ -34,17 +34,17 @@ export async function POST(request: Request) {
 
     await prisma.user.update({
         where: {
-            id: user.id
+            id: user?.id
         },
         data: {
             resetToken: resetToken,
             resetTokenExpiry: resetTokenExpiry
-        }
+        } as any
     });
 
     // Enviar email
     try {
-      await sendPasswordResetEmail(user.email, resetToken);
+      await sendPasswordResetEmail(user?.email || '', resetToken);
     } catch (emailError) {
       console.error('❌ Error enviando email:', emailError);
     }

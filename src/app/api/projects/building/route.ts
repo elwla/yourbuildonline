@@ -11,7 +11,7 @@ export async function GET() {
             return NextResponse.json({ message: "No autorizado" }, { status: 401 });
         }
 
-        const isAdmin = session.user.role === 'admin';
+        const isAdmin = (session.user as { role?: string })?.role === 'admin';
 
         let projects;
         
@@ -37,7 +37,7 @@ export async function GET() {
             projects = await prisma.project.findMany({
                 where: {
                     status: 'construyendo',
-                    assignedUserId: session.user.id
+                    assignedUserId: (session.user as {id?: string})?.id
                 },
                 select: {
                     id: true,
