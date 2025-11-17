@@ -81,7 +81,6 @@ const ProjectForm = () => {
                 setProject({
                     name: res.data.name,
                     description: res.data.description,
-                    // images: [...res.data.project_images],
                     images: [],
                     existingImages: res.data.project_images || [],
                     assignedUserId: res.data.assignedUserId || "",
@@ -238,7 +237,7 @@ const ProjectForm = () => {
                 </div>
 
                 <div className="bg-gray-50 rounded-lg shadow-sm p-6 border border-gray-200">
-                    <label className="block mb-3 text-lg font-semibold text-gray-800" htmlFor="assignedUserId">
+                    <label className="block mb-3 text-lg font-semibold text-gray-800" htmlFor="assignedUserId" data-testid='usuario-asignado'>
                         Usuario Asignado:
                     </label>
                     {usersLoading ? (
@@ -268,7 +267,7 @@ const ProjectForm = () => {
                 </div>
 
                 <div className="bg-gray-50 rounded-lg shadow-sm p-6 border border-gray-200">
-                    <label className="block mb-3 text-lg font-semibold text-gray-800">
+                    <label className="block mb-3 text-lg font-semibold text-gray-800" data-testid='img-proyecto'>
                         Imágenes del Proyecto:
                     </label>
                     
@@ -284,11 +283,13 @@ const ProjectForm = () => {
                                             src={image.url}
                                             alt={`Imagen existente ${index + 1}`}
                                             className="w-full h-24 object-cover rounded-lg shadow-sm group-hover:opacity-75 transition-opacity duration-200"
+                                            data-testid="existing-image"
                                         />
                                         <button
                                             type="button"
                                             onClick={() => removeExistingImage(index)}
                                             className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs font-bold hover:bg-red-600 transition-colors duration-200 opacity-0 group-hover:opacity-100"
+                                            data-testid="remove-existing-image"
                                         >
                                             ×
                                         </button>
@@ -329,6 +330,7 @@ const ProjectForm = () => {
                             onChange={handleFileChange}
                             accept="image/*"
                             multiple
+                            data-testid="file-input"
                         />
                         <div className="flex items-center justify-between w-full p-4 border-2 border-dashed border-gray-300 rounded-lg bg-white hover:border-blue-400 transition-colors duration-200">
                             <div className="flex-1 min-w-0">
