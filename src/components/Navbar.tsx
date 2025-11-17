@@ -38,7 +38,7 @@ const NavBar = () => {
                     <Link href="/about" className="text-gray-300 hover:text-white transition duration-200">Acerca de nosotros</Link>
                     <Link href="/projects" className="text-gray-300 hover:text-white transition duration-200">Proyectos</Link>
                     
-                    {(session?.user as {role?: string})?.role === 'admin' && (
+                    {session?.user?.role === 'admin' && (
                         <Link href="/new" className="text-gray-300 hover:text-white transition duration-200">Crear nuevo proyecto</Link>
                     )}
                     

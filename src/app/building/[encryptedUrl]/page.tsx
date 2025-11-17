@@ -85,7 +85,7 @@ const BuildingPage = async ({ params }: BuildingPageProps) => {
         );
     }
 
-    const isAdmin = (session.user as {role?: string})?.role === 'admin';
+    const isAdmin = session.user?.role === 'admin';
     const isAssignedUser = project.assignedUserId === (session.user as {id?: string})?.id;
 
     if (!isAdmin && !isAssignedUser) {
@@ -182,7 +182,7 @@ const BuildingPage = async ({ params }: BuildingPageProps) => {
                                 </div>
                             </div>
                         </div>
-                        {(session.user as {role?: string})?.role === 'admin' && (
+                        {session.user?.role === 'admin' && (
                             <div className="bg-white rounded-2xl shadow-lg p-6 mt-8">
                                 <h3 className="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
                                     <svg className="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">

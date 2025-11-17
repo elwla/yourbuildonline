@@ -38,7 +38,7 @@ describe('ProjectListPage', () => {
         vi.clearAllMocks();
     })
 
-    it('debe renderizar la página con proyectos correctamente', async () => {
+  it('debe renderizar la página con proyectos correctamente', async () => {
     // Mock de la respuesta exitosa
     mockedAxios.get.mockResolvedValueOnce({ data: mockProjects });
 

@@ -48,7 +48,7 @@ export async function GET(
             return NextResponse.json({ message: "Proyecto no encontrado" }, { status: 404 });
         }
 
-        const isAdmin = (session.user as {role?: string})?.role === 'admin';
+        const isAdmin = session.user?.role === 'admin';
         const isAssignedUser = project.assignedUserId === (session.user as {id?: string}).id;
 
         if (!isAdmin && !isAssignedUser) {

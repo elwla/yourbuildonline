@@ -26,7 +26,7 @@ const BuildingPage = async () => {
     let projects: Project[] = [];
     
     try {
-        const isAdmin = (session.user as {role?: string}).role === 'admin';
+        const isAdmin = session.user.role === 'admin';
 
         if (isAdmin) {
             projects = await prisma.project.findMany({
@@ -70,7 +70,7 @@ const BuildingPage = async () => {
     }
 
     const userProjects = projects.filter(p => p.status === 'construyendo');
-    const isAdmin = (session.user as {role?: string}).role === 'admin';
+    const isAdmin = session.user.role === 'admin';
 
     return (
         <div className="min-h-screen bg-gray-50 py-8">
