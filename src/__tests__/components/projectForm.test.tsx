@@ -4,18 +4,16 @@ import axios from 'axios';
 import { useRouter, useParams } from 'next/navigation';
 import ProjectForm from '@/components/projectForm';
 
-// Mocks
 vi.mock('axios');
 vi.mock('next/navigation', () => ({
   useRouter: vi.fn(),
   useParams: vi.fn(),
 }));
 
-const mockedAxios = vi.mocked(axios);
-const mockUseRouter = vi.mocked(useRouter);
-const mockUseParams = vi.mocked(useParams);
+const mockedAxios = axios as any;
+const mockUseRouter = useRouter as any;
+const mockUseParams = useParams as any;
 
-// Mock data
 const mockUsers = [
   {
     id: '1',
@@ -62,11 +60,9 @@ describe('ProjectForm', () => {
       prefetch: vi.fn(),
     });
 
-    // Mock de params vacío por defecto
     mockUseParams.mockReturnValue({});
 
-    // Mock de axios por defecto
-    mockedAxios.get.mockImplementation((url) => {
+    mockedAxios.get.mockImplementation((url: string) => {
       if (url === '/api/users') {
         return Promise.resolve({ data: mockUsers });
       }
@@ -99,7 +95,7 @@ describe('ProjectForm', () => {
 
     it('Debe renderizar el formulario para editar proyecto cuando hay params.id', async () => {
       // Mock específico para este test
-      mockedAxios.get.mockImplementation((url) => {
+      mockedAxios.get.mockImplementation((url: string) => {
         if (url === '/api/users') {
           return Promise.resolve({ data: mockUsers });
         }
@@ -219,7 +215,6 @@ describe('ProjectForm', () => {
         expect(screen.getByText('1 nueva(s) imagen(es) seleccionada(s)')).toBeInTheDocument();
       });
 
-      // Buscar el botón de eliminar de manera más específica
       const removeButtons = screen.getAllByText('×');
       const removeButton = removeButtons[0].closest('button')!;
       fireEvent.click(removeButton);
@@ -241,8 +236,7 @@ describe('ProjectForm', () => {
         ],
       };
 
-      // Mock específico para este test
-      mockedAxios.get.mockImplementation((url) => {
+      mockedAxios.get.mockImplementation((url: string) => {
         if (url === '/api/users') {
           return Promise.resolve({ data: mockUsers });
         }
@@ -256,22 +250,18 @@ describe('ProjectForm', () => {
 
       render(<ProjectForm />);
 
-      // Esperar a que se cargue completamente
       await waitFor(() => {
         expect(screen.getByDisplayValue('Proyecto Existente')).toBeInTheDocument();
       }, { timeout: 3000 });
 
-      // Buscar la sección de imágenes existentes
       await waitFor(() => {
         expect(screen.getByText('Imágenes Existentes (1)')).toBeInTheDocument();
       }, { timeout: 3000 });
 
-      // Buscar y hacer clic en el botón de eliminar
       const removeButtons = screen.getAllByText('×');
       const removeButton = removeButtons[0].closest('button')!;
       fireEvent.click(removeButton);
 
-      // Verificar que la imagen se eliminó
       await waitFor(() => {
         expect(screen.queryByAltText('Imagen existente 1')).not.toBeInTheDocument();
       });
@@ -286,7 +276,6 @@ describe('ProjectForm', () => {
         expect(screen.getByLabelText(/usuario asignado:/i)).toBeInTheDocument();
       });
 
-      // Llenar formulario
       fireEvent.change(screen.getByLabelText(/nombre del proyecto/i), {
         target: { value: 'Nuevo Proyecto' },
       });
@@ -294,7 +283,6 @@ describe('ProjectForm', () => {
         target: { value: 'Descripción del proyecto' },
       });
 
-      // Enviar formulario
       fireEvent.click(screen.getByRole('button', { name: /crear proyecto/i }));
 
       await waitFor(() => {
@@ -321,8 +309,7 @@ describe('ProjectForm', () => {
         project_images: [],
       };
 
-      // Mock específico
-      mockedAxios.get.mockImplementation((url) => {
+      mockedAxios.get.mockImplementation((url: string) => {
         if (url === '/api/users') {
           return Promise.resolve({ data: mockUsers });
         }
@@ -355,7 +342,6 @@ describe('ProjectForm', () => {
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {});
 
-      // Mock específico para este test
       mockedAxios.post.mockRejectedValueOnce(new Error('Error de red'));
 
       render(<ProjectForm />);
@@ -364,7 +350,6 @@ describe('ProjectForm', () => {
         expect(screen.getByLabelText(/usuario asignado:/i)).toBeInTheDocument();
       });
 
-      // Llenar campos requeridos
       fireEvent.change(screen.getByLabelText(/nombre del proyecto/i), {
         target: { value: 'Proyecto Test' }
       });
@@ -373,10 +358,8 @@ describe('ProjectForm', () => {
         target: { value: 'Descripción test' }
       });
 
-      // Enviar formulario
       fireEvent.click(screen.getByRole('button', { name: /crear proyecto/i }));
 
-      // Esperar a que se procese el error
       await waitFor(() => {
         expect(consoleSpy).toHaveBeenCalledWith('Error submitting project:', expect.any(Error));
       }, { timeout: 3000 });
@@ -390,7 +373,6 @@ describe('ProjectForm', () => {
     });
 
     it('debe mostrar loading durante el envío', async () => {
-      // Mock que nunca se resuelve
       mockedAxios.post.mockImplementationOnce(() => new Promise(() => {}));
 
       render(<ProjectForm />);
@@ -399,7 +381,6 @@ describe('ProjectForm', () => {
         expect(screen.getByLabelText(/usuario asignado:/i)).toBeInTheDocument();
       });
 
-      // Llenar campos requeridos
       fireEvent.change(screen.getByLabelText(/nombre del proyecto/i), {
         target: { value: 'Proyecto Test' }
       });
@@ -408,10 +389,8 @@ describe('ProjectForm', () => {
         target: { value: 'Descripción test' }
       });
 
-      // Enviar formulario
       fireEvent.click(screen.getByRole('button', { name: /crear proyecto/i }));
 
-      // Verificar estado loading
       await waitFor(() => {
         const loadingButton = screen.getByRole('button', { name: /Guardando.../i });
         expect(loadingButton).toBeInTheDocument();
